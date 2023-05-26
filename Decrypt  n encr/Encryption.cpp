@@ -101,7 +101,7 @@ void ShamirCode() {
 //Encryption with Hill cipher
 void HillCode(int codeCheck)
 {
-	vector<char> alf;// = { 'А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я','.',',',' ','?' };
+	vector<char> alf;// Латинские буквы и символы
 
 	for (int i = 32; i < 127; i++)
 	{

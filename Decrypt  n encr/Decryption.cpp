@@ -119,7 +119,7 @@ void ShamirDecode() {
 //Decryption with Hill cipher
 void HillDecode(int codeCheck)
 {
-	vector<char> alf;// = { 'А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я','.',',',' ','?' };
+	vector<char> alf; // Латинские буквы и символы
 
 	for (int i = 32; i < 127; i++)
 	{
@@ -153,7 +153,7 @@ void HillDecode(int codeCheck)
 				}
 				if (isGood == false)
 				{
-					throw runtime_error("The key is incorrect.\nThe key length must be equal to the square of an integer.\n");
+					throw runtime_error("Ключ некорректен.\nДлина ключа должна быть равна квадрату целого числа.\n");
 				}
 				for (char i : someKey)
 				{
@@ -180,7 +180,7 @@ void HillDecode(int codeCheck)
 				}
 				if (determCalk(matrixKey, matrixKey.size()) == 0)
 				{
-					throw runtime_error("The key is incorrect.\nDuring calculations, the determinant of the key matrix turned out to be zero.\n");
+					throw runtime_error("Ключ некорректен.\nВ ходе вычислений определитель ключевой матрицы оказался равным нулю.n");
 				}
 			}
 			catch (const exception& error)
