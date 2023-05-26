@@ -141,7 +141,7 @@ void HillDecode(int codeCheck)
 			{
 				codByAlfKey.clear();
 				matrixKey.clear();
-				cout << "Enter the KEY" << endl << ": ";
+				cout << "Ââåäèòå ÊËÞ×:" << endl;
 				getline(cin, someKey);
 				for (int i = 2; i < someKey.length(); i++)
 				{
