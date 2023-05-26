@@ -29,7 +29,7 @@ void inputStrToTxt()
 	{
 		try
 		{
-			cout << "Вы хотите зашифровать свой файл, создать новый или взять подготовленный?" << endl << "1)Ваш файл" << endl << "2)Создать новый" << endl << "3)Взять подготовленный" << endl << ": ";
+			cout << "Вы хотите зашифровать свой файл, создать новый или взять подготовленный?" << endl << "1) Ваш файл" << endl << "2) Создать новый" << endl << "3) Взять подготовленный" << endl << ": ";
 			getline(cin, fileCreate);
 			if (fileCreate == "")
 			{
@@ -161,7 +161,7 @@ int principleOfOperation()
 	do
 	{
 		//Protection against incorrectly entered operating principle
-		cout << "Выберите принцип работы: " << endl << "1)Шифрование" << endl << "2)Расшифровка" << endl << ": ";
+		cout << "Выберите принцип работы: " << endl << "1) Шифрование" << endl << "2) Расшифровка" << endl << ": ";
 		try
 		{
 			getline(cin, strNumPrinciple);
@@ -200,7 +200,7 @@ int cryptoTypeSelect(int funkType)
 	{
 		try //Protection against an incorrectly entered encryption type
 		{
-			cout << "Выберите тип шифрования/дешифрования: " << endl << "1)Шифр Морзе" << endl << "2)Шифр Шамира" << endl << "3)Шифр Хилла"
+			cout << "Выберите тип шифрования/дешифрования: " << endl << "1) Шифр Морзе" << endl << "2) Шифр Шамира" << endl << "3) Шифр Хилла"
 				<< endl << ": ";
 			getline(cin, strNumType);
 			if (strNumType == "")
@@ -285,7 +285,7 @@ void encryptionCheck(int cryptoType, int funkType)
 	{
 		try
 		{
-			cout << "Вы хотите проверить расшифровку?" << endl << "1)Да" << endl << "2)Нет" << endl << ":";
+			cout << "Вы хотите проверить расшифровку?" << endl << "1) Да" << endl << "2) Нет" << endl << ":";
 			getline(cin, codeCheck);
 			if (codeCheck == "")
 			{
