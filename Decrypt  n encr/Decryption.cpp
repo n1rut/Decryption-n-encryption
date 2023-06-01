@@ -119,7 +119,8 @@ void ShamirDecode() {
 //Decryption with Hill cipher
 void HillDecode(int codeCheck)
 {
-	vector<char> alf = initializeAlphabet(vector<char>&alf);
+	vector<char> alf;
+	initializeAlphabet(alf);
 
 	vector<int> codByAlfKey;
 	vector<vector<int>> matrixKey;
