@@ -119,14 +119,7 @@ void ShamirDecode() {
 //Decryption with Hill cipher
 void HillDecode(int codeCheck)
 {
-	vector<char> alf; // Латинские буквы и символы
-
-	for (int i = 32; i < 127; i++)
-	{
-		alf.push_back((char)i);
-	}
-	alf.push_back('№');
-	alf.push_back((char)181);
+	vector<char> alf = initializeAlphabet(vector<char>&alf);
 
 	vector<int> codByAlfKey;
 	vector<vector<int>> matrixKey;
@@ -319,11 +312,15 @@ void HillDecode(int codeCheck)
 			for (int j = 0; j < matrixKey.size(); j++)
 			{
 				matMinor.clear();
-				for (int a = 0; a < matrixKey.size() - 1; a++)
+				for (int a = 0; a < matrixKey.size(); a++)
 				{
-					vector<int> m;
-					matMinor.push_back(m);
+					if (a != matrixKey.size() - 1)
+					{
+						vector<int> m;
+						matMinor.push_back(m);
+					}
 				}
+
 				int lin = 0;
 				bool isK = false;
 				for (int k = 0; k < matrixKey.size(); k++)
