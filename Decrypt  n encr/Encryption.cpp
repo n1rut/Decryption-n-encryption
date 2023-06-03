@@ -111,58 +111,7 @@ void HillCode(int codeCheck)
 	int obrEl = 100;
 	if (codeCheck != 1)
 	{
-		while (1)
-		{
-			codByAlfKey.clear();
-			matrixKey.clear();
-			someKey = "";
-			for (int i = 0; i < 9; i++)
-			{
-				someKey += alf[rand() % alf.size()];
-			}
-			for (char i : someKey)
-			{
-				for (int j = 0; j < alf.size(); j++)
-				{
-					if (i == alf[j])
-					{
-						codByAlfKey.push_back(j);
-					}
-				}
-			}
-			for (int i = 0; i < (int)rint(sqrt(someKey.length())); i++)
-			{
-				vector<int> m;
-				matrixKey.push_back(m);
-			}
-			g = 0;
-			for (int i = 0; i < (int)rint(sqrt(someKey.length())); i++)
-			{
-				for (int j = 0; j < (int)rint(sqrt(someKey.length())); j++)
-				{
-					matrixKey[i].push_back(codByAlfKey[g++]);
-				}
-			}
-			int detMatrixKey = determCalk(matrixKey, matrixKey.size());;
-			int x = rasAlgEvkl(detMatrixKey, alf.size());
-			int obrEl = 0;
-			if ((detMatrixKey < 0 && x > 0) || (detMatrixKey > 0 && x > 0))
-			{
-				obrEl = x;
-			}
-			if (detMatrixKey < 0 && x < 0)
-			{
-				obrEl = -x;
-			}
-			if (detMatrixKey > 0 && x < 0)
-			{
-				obrEl = alf.size() + x;
-			}
-			if (obrEl < 97)
-			{
-				break;
-			}
-		}
+		generateKey(alf, matrixKey, someKey);
 		ofstream fin1("keys.txt");
 		fin1 << someKey << endl;
 		fin1.close();
@@ -178,29 +127,7 @@ void HillCode(int codeCheck)
 
 	if (codeCheck == 1)
 	{
-		for (char i : key)
-		{
-			for (int j = 1; j < alf.size(); j++)
-			{
-				if (i == alf[j])
-				{
-					codByAlfKey.push_back(j);
-				}
-			}
-		}
-		for (int i = 0; i < (int)rint(sqrt(key.length())); i++)
-		{
-			vector<int> m;
-			matrixKey.push_back(m);
-		}
-		g = 0;
-		for (int i = 0; i < (int)rint(sqrt(key.length())); i++)
-		{
-			for (int j = 0; j < (int)rint(sqrt(key.length())); j++)
-			{
-				matrixKey[i].push_back(codByAlfKey[g++]);
-			}
-		}
+		processKeyMatrix(matrixKey, key, alf);
 	}
 
 
@@ -215,82 +142,10 @@ void HillCode(int codeCheck)
 		string inputString = "";
 		getline(fout, inputString);
 		vector<int> codByAlfStr;
-		for (char i : inputString)
-		{
-			for (int j = 0; j < alf.size(); j++)
-			{
-				if (i == alf[j])
-				{
-					codByAlfStr.push_back(j);
-				}
-			}
-		}
+		codbyStr(inputString, codByAlfStr, alf);
 		vector<vector<int>> matrixStr;
-		int crat = 0;
-		if ((codByAlfStr.size() % (int)rint(sqrt(key.length()))) != 0)
-		{
-			crat = 1;
-		}
-		for (int i = 0; i < codByAlfStr.size() / (int)rint(sqrt(key.length())) + crat; i++)
-		{
-			vector<int> m;
-			matrixStr.push_back(m);
-		}
-		g = 0;
-		for (int i = 0; i < codByAlfStr.size() / (int)rint(sqrt(key.length())) + crat; i++)
-		{
-			if (g < codByAlfStr.size())
-			{
-				for (int j = 0; j < (int)rint(sqrt(key.length())); j++)
-				{
-					matrixStr[i].push_back(codByAlfStr[g++]);
-					if (g >= codByAlfStr.size())
-					{
-						while (matrixStr[i].size() < (int)rint(sqrt(key.length())))
-						{
-							matrixStr[i].push_back(0); ///////////////////////////////////////////////////
-						}
-						break;
-					}
-				}
-			}
-			else
-			{
-				while (matrixStr[i].size() < (int)rint(sqrt(key.length())))
-				{
-					matrixStr[i].push_back(0); ////////////////////////////////////////////////
-				}
-			}
-		}
-		vector<vector<int>> encryptStr;
-		for (int i = 0; i < matrixStr.size(); i++)
-		{
-			vector<int> m;
-			encryptStr.push_back(m);
-		}
-		int mnog = 0;
-		g = -1;
-		for (vector<int> blok : matrixStr)
-		{
-			g++;
-			for (int i = 0; i < blok.size(); i++)
-			{
-				mnog = 0;
-				for (int j = 0; j < blok.size(); j++)
-				{
-					mnog += blok[j] * matrixKey[j][i];
-				}
-				encryptStr[g].push_back(mnog);
-			}
-		}
-		string outputString = "";
-		for (vector<int> blok : encryptStr)
-		{
-			for (int i : blok)
-			{
-				outputString += alf[i % alf.size()];
-			}
-		}
+		processMatrix(matrixStr, codByAlfStr, key);
+		string outputString = encryptMatrix(matrixStr, matrixKey, alf);
 		fin << outputString;
 		cout << outputString << endl;
 		if (!fout.eof())

@@ -199,30 +199,7 @@ void HillDecode(int codeCheck)
 
 	if (codeCheck == 1)
 	{
-		for (char i : key)
-		{
-			for (int j = 0; j < alf.size(); j++)
-			{
-				if (i == alf[j])
-				{
-					codByAlfKey.push_back(j);
-					break;
-				}
-			}
-		}
-		for (int i = 0; i < (int)rint(sqrt(key.length())); i++)
-		{
-			vector<int> m;
-			matrixKey.push_back(m);
-		}
-		g = 0;
-		for (int i = 0; i < (int)rint(sqrt(key.length())); i++)
-		{
-			for (int j = 0; j < (int)rint(sqrt(key.length())); j++)
-			{
-				matrixKey[i].push_back(codByAlfKey[g++]);
-			}
-		}
+		processKeyMatrix(matrixKey, key, alf);
 	}
 
 	system("CLS");
@@ -235,200 +212,28 @@ void HillDecode(int codeCheck)
 	{
 		string inputString = "";
 		getline(fout, inputString);
+
 		vector<int> codByAlfStr;
-		for (char i : inputString)
-		{
-			for (int j = 0; j < alf.size(); j++)
-			{
-				if (i == alf[j])
-				{
-					codByAlfStr.push_back(j);
-				}
-			}
-		}
+		codbyStr(inputString, codByAlfStr, alf);
+
 		vector<vector<int>> matrixStr;
+		processMatrix(matrixStr, codByAlfStr, key);
 
-		int crat = 0;
-		if (codByAlfStr.size() % (int)rint(sqrt(key.length())) != 0)
-		{
-			crat = 1;
-		}
-
-		for (int i = 0; i < codByAlfStr.size() / (int)rint(sqrt(key.length())) + crat; i++)
-		{
-			vector<int> m;
-			matrixStr.push_back(m);
-		}
-		g = 0;
-		for (int i = 0; i < codByAlfStr.size() / (int)rint(sqrt(key.length())) + crat; i++)
-		{
-			if (g < codByAlfStr.size())
-			{
-				for (int j = 0; j < (int)rint(sqrt(key.length())); j++)
-				{
-					matrixStr[i].push_back(codByAlfStr[g++]);
-					if (g >= codByAlfStr.size())
-					{
-						while (matrixStr[i].size() < (int)rint(sqrt(key.length())))
-						{
-							matrixStr[i].push_back(0); ///////////////////////////////////////////
-						}
-						break;
-					}
-				}
-			}
-			else
-			{
-				while (matrixStr[i].size() < (int)rint(sqrt(key.length())))
-				{
-					matrixStr[i].push_back(0); ////////////////////////////////////////////////////
-				}
-			}
-		}
 		int detMatrixKey = determCalk(matrixKey, matrixKey.size());;
 		int x = rasAlgEvkl(detMatrixKey, alf.size());
-		int obrEl = 0;
-		if ((detMatrixKey < 0 && x > 0) || (detMatrixKey > 0 && x > 0))
-		{
-			obrEl = x;
-		}
-		if (detMatrixKey < 0 && x < 0)
-		{
-			obrEl = -x;
-		}
-		if (detMatrixKey > 0 && x < 0)
-		{
-			obrEl = alf.size() + x;
-		}
+		int obrEl = calculateObrEl(detMatrixKey, x, alf); //обратный детерминанту элемент
 
 		vector<vector<int>> matrixAlgDop;
-		for (int i = 0; i < matrixKey.size(); i++)
-		{
-			vector<int> m;
-			matrixAlgDop.push_back(m);
-		}
-		vector<vector<int>> matMinor;
-		for (int i = 0; i < matrixKey.size(); i++)
-		{
-			for (int j = 0; j < matrixKey.size(); j++)
-			{
-				matMinor.clear();
-				for (int a = 0; a < matrixKey.size(); a++)
-				{
-					if (a != matrixKey.size() - 1)
-					{
-						vector<int> m;
-						matMinor.push_back(m);
-					}
-				}
+		AlgDop(matrixKey, matrixAlgDop);
 
-				int lin = 0;
-				bool isK = false;
-				for (int k = 0; k < matrixKey.size(); k++)
-				{
-					isK = false;
-					for (int f = 0; f < matrixKey.size(); f++)
-					{
-						if ((k != i) && (f != j))
-						{
-							matMinor[lin].push_back(matrixKey[k][f]);
-							isK = true;
-						}
-					}
-					if (isK == true)
-					{
-						lin++;
-					}
-				}
-				matrixAlgDop[i].push_back(pow(-1, i + j) * determCalk(matMinor, matMinor.size()));
-			}
-		}
-		for (int i = 0; i < matrixAlgDop.size(); i++)
-		{
-			for (int j = 0; j < matrixAlgDop.size(); j++)
-			{
-				if (matrixAlgDop[i][j] < 0)
-				{
-					int num = abs(matrixAlgDop[i][j]) % alf.size();
-					matrixAlgDop[i][j] = -num;
-				}
-				else
-				{
-					matrixAlgDop[i][j] = matrixAlgDop[i][j] % alf.size();
-				}
-			}
-		}
-		for (int i = 0; i < matrixAlgDop.size(); i++)
-		{
-			for (int j = 0; j < matrixAlgDop.size(); j++)
-			{
-				if (matrixAlgDop[i][j] < 0)
-				{
-					int num = abs(matrixAlgDop[i][j] * obrEl) % alf.size();
-					matrixAlgDop[i][j] = -num;
-				}
-				else
-				{
-					matrixAlgDop[i][j] = (matrixAlgDop[i][j] * obrEl) % alf.size();
-				}
-			}
-		}
+		vector<vector<int>> matMinor;
+		processMatrixAlgDop(matrixAlgDop, matrixKey, alf, obrEl);
 
 		vector<vector<int>> transpMatr;
-		for (int i = 0; i < matrixAlgDop.size(); i++)
-		{
-			vector<int> m;
-			transpMatr.push_back(m);
-		}
+		Transp(matrixAlgDop, alf, transpMatr);
 
-		for (int i = 0; i < matrixAlgDop.size(); i++)
-		{
-			for (int j = 0; j < matrixAlgDop.size(); j++)
-			{
-				transpMatr[i].push_back(matrixAlgDop[j][i]);
-			}
-		}
+		string outputString = decryptString(matrixStr, transpMatr, alf);
 
-		for (int i = 0; i < transpMatr.size(); i++)
-		{
-			for (int j = 0; j < transpMatr.size(); j++)
-			{
-				if (transpMatr[i][j] < 0)
-				{
-					transpMatr[i][j] = alf.size() + transpMatr[i][j];
-				}
-			}
-		}//получии транспонированную матрицу которая является обратной по модулю к матрице ключа.
-
-		vector<vector<int>> decryptStr;
-		for (int i = 0; i < matrixStr.size(); i++)
-		{
-			vector<int> m;
-			decryptStr.push_back(m);
-		}
-		int mnog = 0;
-		g = -1;
-		for (vector<int> blok : matrixStr)
-		{
-			g++;
-			for (int i = 0; i < blok.size(); i++)
-			{
-				mnog = 0;
-				for (int j = 0; j < blok.size(); j++)
-				{
-					mnog += blok[j] * transpMatr[j][i];
-				}
-				decryptStr[g].push_back(mnog);
-			}
-		}
-		string outputString = "";
-		for (vector<int> blok : decryptStr)
-		{
-			for (int i : blok)
-			{
-				outputString += alf[i % alf.size()];
-			}
-		}
 		fin << outputString;
 		cout << outputString << endl;
 		if (!fout.eof())
